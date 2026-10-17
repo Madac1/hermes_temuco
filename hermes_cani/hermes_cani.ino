@@ -55,7 +55,7 @@ void loop() {
   int derivada = error - ultimoError;
   ultimoError = error;
   int giro = Kp * error + Ki * integral + Kd * derivada;
-  
+  imprimirDatos(posicion, error, derivada, integral,giro, Tp);
   // giro diferencial
   int velIzq = Tp + giro;
   int velDer = Tp - giro;
