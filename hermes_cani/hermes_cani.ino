@@ -1,6 +1,5 @@
+#include "variables.h"
 #include <QTRSensors.h>
-#include "pines.h"
-
 #define NUM_SENSORS         6 // Número sensores usados
 #define NUM_SAMPLES_PER_SENSOR  4 // Muestras por sensor (DEJAR EN 4)
 #define EMITTER_PIN             11    // Pin del emisor
@@ -14,18 +13,59 @@ NUM_SENSORS, NUM_SAMPLES_PER_SENSOR, EMITTER_PIN);
 unsigned int sensorValues[NUM_SENSORS]; // Lista para guardar las lecturas
 
 #define BOTON 12
+#define BUZZER 10
+ 
+// VARIABLES Y CONSTANTES
+float Kp = 0.3; // constante proporcional
+float Ki = 0.0001;
+float Kd = 0.001;
+int ref = 0; // referencia o centro
+int Tp = 70; // Target power o velocidad base
+int ultimoError = 0;
+int integral = 0;
+
+//Variables de Hitos
+int geo = 0;      //Variable de estado que indica nuestro modo de geo
+int geo1 = 0, geo2 = 0, geo3 = 0; //Guardan nuestra huella digital
+int umbralDer = 512; //umbral que consideraremos como negro
+int umbralIzq = 512;
 
 
+// Configuración, corre una vez al inicio
 void setup() {
-  Serial.begin(9600); // inicializar comunicacion serial
-  motorSetup(); // configuramos los motores
-  Serial.println("");
-  // probarMotores();
-  esperarBoton();
+  //Se inicia la comunicación serial
+  Serial.begin(9600);
+  motorSetup();
+  
+  probarMotores(100);
+    Serial.println("Listo para calibrar... \n");
+    esperarBoton();
+  moverMotores(40,-40); // se queda moviendo calibrando
+    Serial.println("Calibrando... \n");
   calibrar();
+    Serial.println("Calibracion lista, esperando inicio... \n");
+  moverMotores(0,0); // se detiene despues de calibrar
+  tonoCalibracion();
   esperarBoton();
+  
+    Serial.println("Siguiendo la linea... \n");
 }
 
-void loop() {
 
+void loop() {
+  qtra.read(sensorValues);  // lectura de valores de sensores
+  int posicion = qtra.readLine(sensorValues, true , true ); // leemos la linea, me guarda un dato de 0 a 5000
+  posicion = map(posicion, 0, 5000, -255, 255); // mapeo de valor de posicion para dejarlo en un valoe entre -255 y 255
+ 
+  int error = posicion - ref;
+  integral = integral + error;
+  int derivada = error - ultimoError;
+  ultimoError = error;
+  int giro = Kp * error + Ki * integral + Kd * derivada;
+  
+   verbosidadSerial(posicion, error, derivada, integral, giro);
+  // giro diferencial
+  int velIzq = Tp + giro;
+  int velDer = Tp - giro;
+  moverMotores(velIzq,velDer);
 }
