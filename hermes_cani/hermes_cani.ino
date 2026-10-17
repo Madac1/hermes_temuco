@@ -1,4 +1,4 @@
-#include "variables.h"
+#include "pines.h"
 #include <QTRSensors.h>
 #define NUM_SENSORS         6 // Número sensores usados
 #define NUM_SAMPLES_PER_SENSOR  4 // Muestras por sensor (DEJAR EN 4)
@@ -13,7 +13,6 @@ NUM_SENSORS, NUM_SAMPLES_PER_SENSOR, EMITTER_PIN);
 unsigned int sensorValues[NUM_SENSORS]; // Lista para guardar las lecturas
 
 #define BOTON 12
-#define BUZZER 10
  
 // VARIABLES Y CONSTANTES
 float Kp = 0.3; // constante proporcional
@@ -24,11 +23,6 @@ int Tp = 70; // Target power o velocidad base
 int ultimoError = 0;
 int integral = 0;
 
-//Variables de Hitos
-int geo = 0;      //Variable de estado que indica nuestro modo de geo
-int geo1 = 0, geo2 = 0, geo3 = 0; //Guardan nuestra huella digital
-int umbralDer = 512; //umbral que consideraremos como negro
-int umbralIzq = 512;
 
 
 // Configuración, corre una vez al inicio
@@ -45,7 +39,6 @@ void setup() {
   calibrar();
     Serial.println("Calibracion lista, esperando inicio... \n");
   moverMotores(0,0); // se detiene despues de calibrar
-  tonoCalibracion();
   esperarBoton();
   
     Serial.println("Siguiendo la linea... \n");
@@ -63,7 +56,6 @@ void loop() {
   ultimoError = error;
   int giro = Kp * error + Ki * integral + Kd * derivada;
   
-   verbosidadSerial(posicion, error, derivada, integral, giro);
   // giro diferencial
   int velIzq = Tp + giro;
   int velDer = Tp - giro;
