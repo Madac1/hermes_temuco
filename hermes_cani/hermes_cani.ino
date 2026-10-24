@@ -14,16 +14,18 @@ unsigned int sensorValues[NUM_SENSORS]; // Lista para guardar las lecturas
 
 #define BOTON 12
  
-// VARIABLES Y CONSTANTES
-int Tp = 70; // Target power o velocidad base
+// VARIABLES Y CONSTANTES PARA CALIBRAR
+int Tp = 0; // Target power o velocidad base
 float Kp = 0.39; // constante proporcional (+ 0.01 - 0.01)
-float Ki = 0.0001; // (+-0.0001)
-float Kd = 0.001; // (+-0.001)
+float Ki = 0.001; // (+-0.0001)
+float Kd = 0.1; // (+-0.001)
 int ref = 0; // referencia o centro
-
+xz
 // variables para el PID
 int ultimoError = 0;
-int integral = 0;
+long integral = 0;
+
+bool datos = 0;
 
 // Configuración, corre una vez al inicio
 void setup() {
@@ -31,7 +33,7 @@ void setup() {
   Serial.begin(9600);
   motorSetup();
   
-  probarMotores(100);
+  // probarMotores(100);
     Serial.println("Listo para calibrar... \n");
     esperarBoton();
   moverMotores(40,-40); // se queda moviendo calibrando
@@ -42,20 +44,26 @@ void setup() {
   esperarBoton();
   
     Serial.println("Siguiendo la linea... \n");
+    Serial.flush(); // limpia el monitor serial
+      Serial.print("Error Proporcional Derivada Integral Giro\n");
 }
 
 
 void loop() {
   qtra.read(sensorValues);  // lectura de valores de sensores
-  int posicion = qtra.readLine(sensorValues, true , true ); // leemos la linea, me guarda un dato de 0 a 5000
+  int posicion = qtra.readLine(sensorValues, true , false ); // leemos la linea, me guarda un dato de 0 a 5000
   posicion = map(posicion, 0, 5000, -255, 255); // mapeo de valor de posicion para dejarlo en un valoe entre -255 y 255
+
+  leerBluetooth();
  
   int error = posicion - ref;
   integral = integral + error;
   int derivada = error - ultimoError;
-  ultimoError = error;
   int giro = Kp * error + Ki * integral + Kd * derivada;
-  imprimirDatos(posicion, error, derivada, integral,giro, Tp);
+  ultimoError = error;
+  if(datos){
+    imprimirDatos(error, Kp * error, Kd * derivada, Ki * integral, giro);
+  }
   // giro diferencial
   int velIzq = Tp + giro;
   int velDer = Tp - giro;

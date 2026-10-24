@@ -26,6 +26,6 @@ void motor(int i1, int i2, int pwm, int vel)
 
 void moverMotores(int velIzq, int velDer)
 {
-  motor(AI1, AI2, PWMA, velIzq); // motor izquierdo (canal A)
+  motor(AI2, AI1, PWMA, velIzq); // motor izquierdo (canal A)
   motor(BI1, BI2, PWMB, velDer); // motor derecho (canal B)
 }
