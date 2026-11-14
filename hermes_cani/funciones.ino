@@ -102,5 +102,29 @@ void leerBluetooth(){
         */
     }
   }
-  
+}
+
+void hitos(){
+    int Hiz = analogRead(HIZ);  //Leemos el estado de ambos sensores
+    int Hde = analogRead(HDE);
+
+    if (Hiz > umbral) {         // MENOR QUE = PISTA NEGRA LINEA BLANCA
+        Hiz = 1;               // MAYOR QUE = PISTA BLANCA LINEA NEGRA
+    } else {        
+        Hiz = 0;               
+    }
+    // ----------------------------
+    if (Hde > umbral) {       // MENOR QUE = PISTA NEGRA LINEA BLANCA
+        Hde = 1;             // MAYOR QUE = PISTA BLANCA LINEA NEGRA
+    } else {                    
+        Hde = 0;       
+    }
+
+    if (Hiz == 0 && Hde == 0) {
+        geo = 0;
+    }
+
+   
+
+
 }

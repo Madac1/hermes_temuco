@@ -13,7 +13,7 @@ NUM_SENSORS, NUM_SAMPLES_PER_SENSOR, EMITTER_PIN);
 unsigned int sensorValues[NUM_SENSORS]; // Lista para guardar las lecturas
 
 #define BOTON 12
- 
+
 // VARIABLES Y CONSTANTES PARA CALIBRAR
 int Tp = 0; // Target power o velocidad base
 float Kp = 0.39; // constante proporcional (+ 0.01 - 0.01)
@@ -38,21 +38,22 @@ int umbral = 750; //umbral que consideraremos como negro
 void setup() {
   //Se inicia la comunicación serial
   Serial.begin(9600);
+  pinMode(HIZ, INPUT);
+  pinMode(HDE, INPUT);
+
   motorSetup();
-  
   // probarMotores(100);
-    Serial.println("Listo para calibrar... \n");
-    esperarBoton();
-  moverMotores(40,-40); // se queda moviendo calibrando
-    Serial.println("Calibrando... \n");
-  calibrar();
-    Serial.println("Calibracion lista, esperando inicio... \n");
-  moverMotores(0,0); // se detiene despues de calibrar
+  Serial.println("Listo para calibrar... \n");
   esperarBoton();
-  
-    Serial.println("Siguiendo la linea... \n");
-    Serial.flush(); // limpia el monitor serial
-      Serial.print("Error Proporcional Derivada Integral Giro\n");
+  moverMotores(40, -40); // se queda moviendo calibrando
+  Serial.println("Calibrando... \n");
+  calibrar();
+  Serial.println("Calibracion lista, esperando inicio... \n");
+  moverMotores(0, 0); // se detiene despues de calibrar
+  esperarBoton();
+  Serial.println("Siguiendo la linea... \n");
+  Serial.flush(); // limpia el monitor serial
+  Serial.print("Error Proporcional Derivada Integral Giro\n");
 }
 
 
@@ -62,17 +63,17 @@ void loop() {
   posicion = map(posicion, 0, 5000, -255, 255); // mapeo de valor de posicion para dejarlo en un valoe entre -255 y 255
 
   leerBluetooth();
- 
+
   int error = posicion - ref;
   integral = integral + error;
   int derivada = error - ultimoError;
   int giro = Kp * error + Ki * integral + Kd * derivada;
   ultimoError = error;
-  if(datos){
+  if (datos) {
     imprimirDatos(error, Kp * error, Kd * derivada, Ki * integral, giro);
   }
   // giro diferencial
   int velIzq = Tp + giro;
   int velDer = Tp - giro;
-  moverMotores(velIzq,velDer);
+  moverMotores(velIzq, velDer);
 }
