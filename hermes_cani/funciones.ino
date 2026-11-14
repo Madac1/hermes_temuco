@@ -133,30 +133,36 @@ void hitos() {
   else if (Hiz == 1 && Hde == 1) {
     geo = 3;
   }
-
-  if (geo == 0 && geo1 == 1 && geo2 == 0) { //¿Pasamos el hito izquierdo?
-    funcionHitoIz();                    //Realizo las acciones para hito izquierdo
-  }
-  if (geo == 0 && geo1 == 2 && geo2 == 0) { //¿Pasamos el hito derecho?
-    funcionHitoDe();                     //Realizo las acciones para hito derecho
-  }
-  if (geo == 0 && ((geo1 == 3) || (geo2 == 3) || (geo3 == 3))) { //¿Pasamos un cruce?
-    funcionCruce();                      //Realizo las acciones para hito de cruce
+  
+  if (geo1 != geo) {   //Comprobamos si existe cambio del último geo registrado y el geo actual
+    if (geo == 0 && geo1 == 1 && geo2 == 0) { //¿Pasamos el hito izquierdo?
+      funcionHitoIz();                    //Realizo las acciones para hito izquierdo
+    }
+    if (geo == 0 && geo1 == 2 && geo2 == 0) { //¿Pasamos el hito derecho?
+      funcionHitoDe();                     //Realizo las acciones para hito derecho
+    }
+    if (geo == 0 && ((geo1 == 3) || (geo2 == 3) || (geo3 == 3))) { //¿Pasamos un cruce?
+      funcionCruce();                      //Realizo las acciones para hito de cruce
+    }
+    //Actualizo mi historial de los últimos 3 geos detectados
+    geo3 = geo2;
+    geo2 = geo1;
+    geo1 = geo;
   }
 }
 
-void funcionHitoIz(){
+void funcionHitoIz() {
   contador_hito_izq++;
   Serial.print("Contador Izq: ");
   Serial.println(contador_hito_izq);
 }
 
-void funcionHitoDe(){
+void funcionHitoDe() {
   contador_hito_der++;
   Serial.print("Contador Der: ");
   Serial.println(contador_hito_der);
 }
 
-void funcionCruce(){
+void funcionCruce() {
 
 }

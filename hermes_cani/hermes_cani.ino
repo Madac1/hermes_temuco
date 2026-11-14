@@ -15,14 +15,12 @@ unsigned int sensorValues[NUM_SENSORS]; // Lista para guardar las lecturas
 #define BOTON 12
 
 
-
 // VARIABLES Y CONSTANTES PARA CALIBRAR
-int Tp = 0; // Target power o velocidad base
+int Tp = 60; // Target power o velocidad base
 float Kp = 0.39; // constante proporcional (+ 0.01 - 0.01)
-float Ki = 0.001; // (+-0.0001)
-float Kd = 0.1; // (+-0.001)
+float Ki = 0.001; // (+-0.001)
+float Kd = 0.1; // (+-0.01)
 int ref = 0; // referencia o centro
-
 
 
 // variables para el PID
