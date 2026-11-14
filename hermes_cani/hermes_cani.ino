@@ -28,7 +28,7 @@ long integral = 0;
 bool datos = 0;
 
 // VARIABLES DE GEOS
-int geo = 0;      //Variable de estado que indica nuestro modo de geo
+int geo = 1;      //Variable de estado que indica nuestro modo de geo
 int geo1 = 0, geo2 = 0, geo3 = 0; //Guardan nuestra huella digital
 
 int umbral = 750; //umbral que consideraremos como negro

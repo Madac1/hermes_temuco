@@ -1,24 +1,24 @@
-void calibrar(){
+void calibrar() {
   moverMotores(40, -40);
   //Se calibra el sensor
   for (int i = 0; i < 400; i++) {
     qtra.calibrate();
   }
-  
+
   moverMotores(0, 0);
 }
 
-void esperarBoton(){
-// espera a que se pulse el boton para hacer cosas
-  while(true){
-    if(digitalRead(BOTON) == 1){
+void esperarBoton() {
+  // espera a que se pulse el boton para hacer cosas
+  while (true) {
+    if (digitalRead(BOTON) == 1) {
       break; // break nos saca del while
     }
   }
-  
+
 }
 
-void probarMotores(int vel){
+void probarMotores(int vel) {
   // mueve de forma secuencial los motores
   moverMotores(vel, 0);
   delay(1000);
@@ -30,9 +30,9 @@ void probarMotores(int vel){
   delay(1000);
   moverMotores(0, 0);
   delay(1000);
-  }
+}
 
-void imprimirDatos(int err, int prop, int derivada, int integral, int giro){
+void imprimirDatos(int err, int prop, int derivada, int integral, int giro) {
   Serial.print(err);
   Serial.print("\t");
   Serial.print(prop);
@@ -46,12 +46,12 @@ void imprimirDatos(int err, int prop, int derivada, int integral, int giro){
 }
 
 
-void leerBluetooth(){
-    // Revisar si hay algo escrito en el monitor serial
+void leerBluetooth() {
+  // Revisar si hay algo escrito en el monitor serial
   if (Serial.available() > 0) {
     char letra = Serial.read();  // Leer una letra
     // se toma la decicion de que variable cambiar
-    switch (letra){
+    switch (letra) {
       case '1':
         Kp += 0.01;
         Serial.print("Kp:");
@@ -93,38 +93,63 @@ void leerBluetooth(){
         Serial.println(Tp);
         break;
         /*
-      case '9':
-        datos = !datos;
-        Serial.print("Se alterno la impresion de datos\n");
-        Serial.flush();
-      Serial.print("Error Proporcional Derivada Integral Giro\n");
-        break;
+          case '9':
+          datos = !datos;
+          Serial.print("Se alterno la impresion de datos\n");
+          Serial.flush();
+          Serial.print("Error Proporcional Derivada Integral Giro\n");
+          break;
         */
     }
   }
 }
 
-void hitos(){
-    int Hiz = analogRead(HIZ);  //Leemos el estado de ambos sensores
-    int Hde = analogRead(HDE);
+void hitos() {
+  int Hiz = analogRead(HIZ);  //Leemos el estado de ambos sensores
+  int Hde = analogRead(HDE);
 
-    if (Hiz > umbral) {         // MENOR QUE = PISTA NEGRA LINEA BLANCA
-        Hiz = 1;               // MAYOR QUE = PISTA BLANCA LINEA NEGRA
-    } else {        
-        Hiz = 0;               
-    }
-    // ----------------------------
-    if (Hde > umbral) {       // MENOR QUE = PISTA NEGRA LINEA BLANCA
-        Hde = 1;             // MAYOR QUE = PISTA BLANCA LINEA NEGRA
-    } else {                    
-        Hde = 0;       
-    }
+  if (Hiz > umbral) {         // MENOR QUE = PISTA NEGRA LINEA BLANCA
+    Hiz = 1;               // MAYOR QUE = PISTA BLANCA LINEA NEGRA
+  } else {
+    Hiz = 0;
+  }
+  if (Hde > umbral) {       // MENOR QUE = PISTA NEGRA LINEA BLANCA
+    Hde = 1;             // MAYOR QUE = PISTA BLANCA LINEA NEGRA
+  } else {
+    Hde = 0;
+  }
 
-    if (Hiz == 0 && Hde == 0) {
-        geo = 0;
-    }
+  // --------------------------------------
 
-   
+  if (Hiz == 0 && Hde == 0) {
+    geo = 0;
+  }
+  else if (Hiz == 1 && Hde == 0) {
+    geo = 1;
+  }
+  else if (Hiz == 0 && Hde == 1) {
+    geo = 2;
+  }
+  else if (Hiz == 1 && Hde == 1) {
+    geo = 3;
+  }
+
+
+
+  if (geo == 0 && geo1 == 1 && geo2 == 0) { //¿Pasamos el hito izquierdo?
+    funcionHitoIz();                    //Realizo las acciones para hito izquierdo
+  }
+  if (geo == 0 && geo1 == 2 && geo2 == 0) { //¿Pasamos el hito derecho?
+    funcionHitoDe();                     //Realizo las acciones para hito derecho
+  }
+  if (geo == 0 && ((geo1 == 3) || (geo2 == 3) || (geo3 == 3))) { //¿Pasamos un cruce?
+    funcionCruce();                      //Realizo las acciones para hito de cruce
+  }
+
+
+
+
+
 
 
 }
