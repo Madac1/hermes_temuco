@@ -14,13 +14,17 @@ unsigned int sensorValues[NUM_SENSORS]; // Lista para guardar las lecturas
 
 #define BOTON 12
 
+
+
 // VARIABLES Y CONSTANTES PARA CALIBRAR
 int Tp = 0; // Target power o velocidad base
 float Kp = 0.39; // constante proporcional (+ 0.01 - 0.01)
 float Ki = 0.001; // (+-0.0001)
 float Kd = 0.1; // (+-0.001)
 int ref = 0; // referencia o centro
-xz
+
+
+
 // variables para el PID
 int ultimoError = 0;
 long integral = 0;
@@ -33,6 +37,8 @@ int geo1 = 0, geo2 = 0, geo3 = 0; //Guardan nuestra huella digital
 
 int umbral = 750; //umbral que consideraremos como negro
 
+int contador_hito_izq = 0;
+int contador_hito_der = 0;
 
 // Configuración, corre una vez al inicio
 void setup() {

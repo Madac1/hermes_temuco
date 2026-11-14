@@ -134,8 +134,6 @@ void hitos() {
     geo = 3;
   }
 
-
-
   if (geo == 0 && geo1 == 1 && geo2 == 0) { //¿Pasamos el hito izquierdo?
     funcionHitoIz();                    //Realizo las acciones para hito izquierdo
   }
@@ -145,11 +143,20 @@ void hitos() {
   if (geo == 0 && ((geo1 == 3) || (geo2 == 3) || (geo3 == 3))) { //¿Pasamos un cruce?
     funcionCruce();                      //Realizo las acciones para hito de cruce
   }
+}
 
+void funcionHitoIz(){
+  contador_hito_izq++;
+  Serial.print("Contador Izq: ");
+  Serial.println(contador_hito_izq);
+}
 
+void funcionHitoDe(){
+  contador_hito_der++;
+  Serial.print("Contador Der: ");
+  Serial.println(contador_hito_der);
+}
 
-
-
-
+void funcionCruce(){
 
 }
