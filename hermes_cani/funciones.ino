@@ -100,6 +100,13 @@ void leerBluetooth() {
           Serial.print("Error Proporcional Derivada Integral Giro\n");
           break;
         */
+
+       case '9':
+        Serial.print("Reinciando los valores\n");
+        Tp = 60; 
+        Kp = 0.39;
+        Ki = 0.001;
+        Kd = 0.1;
     }
   }
 }
