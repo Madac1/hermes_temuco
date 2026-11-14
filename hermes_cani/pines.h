@@ -6,3 +6,6 @@
 // Pines puente H de velocidad
 #define PWMA 6 // no necesita pinMode
 #define PWMB  5 // no necesita pinMode
+
+#define HIZ A7    //sensor QTR-1A izquierdo
+#define HDE A6   // sensor qtr derecho
