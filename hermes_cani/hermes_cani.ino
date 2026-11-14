@@ -14,6 +14,8 @@ unsigned int sensorValues[NUM_SENSORS]; // Lista para guardar las lecturas
 
 #define BOTON 12
 
+#define BUZZER 10
+
 
 // VARIABLES Y CONSTANTES PARA CALIBRAR
 int Tp = 60; // Target power o velocidad base

@@ -159,15 +159,20 @@ void hitos() {
 }
 
 void funcionHitoIz() {
+  tone(BUZZER, 1000, 100); // Tono para escuchar cuando pasa por una marca
   contador_hito_izq++;
   Serial.print("Contador Izq: ");
   Serial.println(contador_hito_izq);
 }
 
 void funcionHitoDe() {
-  contador_hito_der++;
+  tone(BUZZER, 1000, 100); // Tono para escuchar cuando pasa por una marca
+  contador_hito_der++; // contador
   Serial.print("Contador Der: ");
   Serial.println(contador_hito_der);
+
+  // PENDIENTE: Hacer que el robot se detenga
+  // al contar dos veces la marca de la derecha.
 }
 
 void funcionCruce() {
